@@ -103,7 +103,7 @@ search_lbl.grid(row=0, column=0, padx=7, pady=7)
 
 
 def on_combobox_select(event):
-    if search_in.get() != "Search":
+    if search_in.get() != "Select":
         search_entry.config(state='normal')
         search_entry.grid(row=0, column=2, padx=12, pady=2)
         search_entry.delete(0, tk.END)
@@ -112,7 +112,7 @@ def on_combobox_select(event):
 
 
 search_in = ttk.Combobox(search_frame, text="Search", font=("Arial", 14), state="readonly")
-search_in["values"] = ("Search", "EMP ID", "NAME", "PHONE NUMBER", "EMAIL")
+search_in["values"] = ("Select", "EMP ID", "NAME", "PHONE NUMBER", "EMAIL")
 search_in.grid(row=0, column=1, padx=2, pady=2)
 search_in.bind("<<ComboboxSelected>>", on_combobox_select)
 
@@ -161,11 +161,11 @@ btn_frame.place(x=40, y=355, width=382, height=130)
 def reset():
     clear()
     search_entry.delete(0, tk.END)
-    search_in.set("Search")
+    search_in.set("Select")
     search_entry.grid_forget()
     list_employees()
 
-reset = tk.Button(btn_frame, text="Reset Search", font=("arial", 13), width=18, height=1, bg="lightgrey",command=reset)
+reset = tk.Button(btn_frame, text="Reset", font=("arial", 13), width=18, height=1, bg="lightgrey",command=reset)
 reset.grid(row=2, column=0,columnspan=2, padx=2, pady=2)
 
 
@@ -193,6 +193,10 @@ def add_employee():
     or JOB_POSITION.get()=="" or GENDER.get()==""):
         insert=False
     if(insert):
+
+        if ( collection.find_one({"emp_id": EMPID.get()})!=None):
+            show_message_dialog("Employee Id Already Exist.")
+            return
 
         employee_data = {
             "emp_id":EMPID.get(),
